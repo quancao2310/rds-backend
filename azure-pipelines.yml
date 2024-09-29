@@ -1,0 +1,83 @@
+# Maven
+# Build your Java project and run tests with Apache Maven.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/java
+
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  - group: 'AWS Secrets'
+  - name: MAVEN_CACHE_FOLDER
+    value: $(Pipeline.Workspace)/.m2/repository
+  - name: MAVEN_OPTS
+    value: '-Dmaven.repo.local=$(MAVEN_CACHE_FOLDER)'
+
+steps:
+- task: Cache@2
+  inputs:
+    key: 'maven | "$(Agent.OS)" | **/pom.xml'
+    restoreKeys: |
+      maven | "$(Agent.OS)"
+      maven
+    path: $(MAVEN_CACHE_FOLDER)
+  displayName: Cache Maven local repo
+
+- task: Maven@4
+  inputs:
+    mavenPomFile: 'pom.xml'
+    mavenOptions: '-Xmx3072m $(MAVEN_OPTS)'
+    goals: 'clean package'
+    options: '-DskipTests=true'
+    javaHomeOption: 'JDKVersion'
+    jdkVersionOption: '1.21'
+    jdkArchitectureOption: 'x64'
+    publishJUnitResults: true
+    testResultsFiles: '**/surefire-reports/TEST-*.xml'
+  displayName: Build with Maven
+
+- task: CopyFiles@2
+  inputs:
+    Contents: '**/target/**'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+  displayName: Copy Files to Artifact Staging Directory
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
+  displayName: Publish Build Artifacts
+
+- task: S3Upload@1
+  displayName: Upload jar file to AWS S3 Bucket
+  inputs:
+    bucketName: '$(AWS_S3_BUCKET)'
+    sourceFolder: '$(Build.ArtifactStagingDirectory)'
+    globExpressions: '**/*.jar'
+    flattenFolders: true
+  env:
+    AWS_ACCESS_KEY_ID: $(AWS_ACCESS_KEY_ID)
+    AWS_SECRET_ACCESS_KEY: $(AWS_SECRET_ACCESS_KEY)
+    AWS_REGION: $(AWS_REGION)
+    AWS_S3_BUCKET: $(AWS_S3_BUCKET)
+
+- task: BeanstalkDeployApplication@1
+  displayName: Deploy application to AWS Elastic Beanstalk
+  inputs:
+    applicationName: '$(AWS_ELASTICBEANSTALK_APPLICATION_NAME)'
+    environmentName: '$(AWS_ELASTICBEANSTALK_ENVIRONMENT_NAME)'
+    applicationType: 's3'
+    deploymentBundleBucket: '$(AWS_S3_BUCKET)'
+    deploymentBundleKey: 'regional-delicacy-0.0.1-SNAPSHOT.jar'
+    versionLabel: 'v$(Build.BuildId)'
+  env:
+    AWS_ACCESS_KEY_ID: $(AWS_ACCESS_KEY_ID)
+    AWS_SECRET_ACCESS_KEY: $(AWS_SECRET_ACCESS_KEY)
+    AWS_REGION: $(AWS_REGION)
+    AWS_S3_BUCKET: $(AWS_S3_BUCKET)
+    AWS_ELASTICBEANSTALK_APPLICATION_NAME: $(AWS_ELASTICBEANSTALK_APPLICATION_NAME)
+    AWS_ELASTICBEANSTALK_ENVIRONMENT_NAME: $(AWS_ELASTICBEANSTALK_ENVIRONMENT_NAME)
