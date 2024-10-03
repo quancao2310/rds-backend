@@ -1,9 +1,14 @@
 {
-    "properties": [
-        {
-            "name": "security.jwt.token.secret-key",
-            "type": "java.lang.String",
-            "description": "JWT Secret Key"
-        }
-    ]
+  "properties": [
+    {
+      "name": "security.jwt.token.secret-key",
+      "type": "java.lang.String",
+      "description": "JWT Secret Key"
+    },
+    {
+      "name": "cors.allowed-origins",
+      "type": "java.lang.List<java.lang.String>",
+      "description": "A comma-separated list of CORS Allowed Origins"
+    }
+  ]
 }
