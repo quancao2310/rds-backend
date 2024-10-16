@@ -2,7 +2,10 @@
 
 ## Introduction
 
-The Backend for Regional-Delicacy-Shop Application, which serves RESTful APIs for the React app.
+The Backend for Regional-Delicacy-Shop Application, which serves RESTful APIs for the React app. Here are the links:
+
+- Backend URL: https://api.regionaldelicacyshop.software
+- API documentation in Swagger UI: https://api.regionaldelicacyshop.software/swagger-ui/index.html
 
 ## Technology Stack
 
@@ -47,7 +50,7 @@ If you are using VS Code, you should install [Spring Boot Extension Pack](https:
 To build and package the app, run the following command:
 
 ```sh
-mvn clean package  -DskipTests
+mvn clean package -DskipTests
 ```
 
 To run the tests, configure the environment to use H2 database and run:
@@ -71,10 +74,7 @@ To add new dependencies, simply add them to the `<dependencies>` section of the 
 
 ## Deployment
 
-The application is currently deployed on AWS (Amazon Web Service) Elastic Beanstalk and configured with Amazon Cloudfront. Here are the deployment-related links:
-
-- Base API URL: https://d3ay2mm64oj4vx.cloudfront.net
-- Swagger UI API documentation: https://d3ay2mm64oj4vx.cloudfront.net/swagger-ui/index.html
+The application is currently deployed on AWS (Amazon Web Service) Elastic Beanstalk with 1 underlying EC2 instance.
 
 ## Contribute
 
