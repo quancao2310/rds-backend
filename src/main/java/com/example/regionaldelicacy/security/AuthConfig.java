@@ -30,6 +30,8 @@ public class AuthConfig {
                         .requestMatchers(HttpMethod.POST, "/api/v1/auth/*").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/books").hasRole("ADMIN") // API just for authorization testing, should be removed later
                         .requestMatchers("/api/v1/samples*").permitAll() // Also for testing
+                        .requestMatchers("/api/v1/products").permitAll()
+                        .requestMatchers("/api/v1/products/*").permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
