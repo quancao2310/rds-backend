@@ -1,12 +1,12 @@
 package com.example.regionaldelicacy.services;
 
+import com.example.regionaldelicacy.exceptions.ProductNotFoundException;
 import com.example.regionaldelicacy.models.Product;
 import com.example.regionaldelicacy.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ProductService {
@@ -18,8 +18,12 @@ public class ProductService {
         return productRepository.findAll();
     }
 
-    public Optional<Product> getProductById(Long id) {
-        return productRepository.findById(id);
+    public Product getProductById(Long id) {
+        List<Product> product = productRepository.findByProductId(id);
+        if (product == null || product.size() == 0) {
+            throw new ProductNotFoundException();
+        }
+        return product.get(0);
     }
 
     public Product saveProduct(Product product) {

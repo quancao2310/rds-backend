@@ -10,10 +10,9 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/products")
+@RequestMapping("/api/v1/products")
 public class ProductController {
 
     @Autowired
@@ -25,20 +24,19 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public Optional<Product> getProductById(@PathVariable Long id) {
+    public Product getProductById(@PathVariable Long id) {
         return productService.getProductById(id);
     }
 
     @PostMapping
     public ResponseEntity<Product> createProduct(@Valid @RequestBody ProductDto productDTO) {
-        // Convert DTO to Product
         Product product = new Product();
-        product.setProductName(productDTO.getProductName());
-        product.setDescription(productDTO.getDescription());
-        product.setPrice(productDTO.getPrice());
-        product.setCategory(productDTO.getCategory());
-        product.setStock(productDTO.getStock());
-        product.setImageUrl(productDTO.getImageUrl());
+        product.setProductName(productDTO.productName());
+        product.setDescription(productDTO.description());
+        product.setPrice(productDTO.price());
+        product.setCategory(productDTO.category());
+        product.setStock(productDTO.stock());
+        product.setImageUrl(productDTO.imageUrl());
         Product savedProduct = productService.saveProduct(product);
         return ResponseEntity.ok(savedProduct);
     }
