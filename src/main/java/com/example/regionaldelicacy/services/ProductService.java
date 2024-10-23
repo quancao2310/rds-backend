@@ -1,29 +1,32 @@
 package com.example.regionaldelicacy.services;
 
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.stereotype.Service;
+
 import com.example.regionaldelicacy.exceptions.ProductNotFoundException;
 import com.example.regionaldelicacy.models.Product;
 import com.example.regionaldelicacy.repositories.ProductRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
-import java.util.List;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class ProductService {
-
-    @Autowired
-    private ProductRepository productRepository;
+    private final ProductRepository productRepository;
 
     public List<Product> getAllProducts() {
         return productRepository.findAll();
     }
 
+    public List<Product> getProductsByCategory(String category) {
+        return productRepository.findByCategory(category);
+    }
+
     public Product getProductById(Long id) {
-        List<Product> product = productRepository.findByProductId(id);
-        if (product == null || product.size() == 0) {
-            throw new ProductNotFoundException();
-        }
-        return product.get(0);
+        Optional<Product> product = productRepository.findById(id);
+        return product.orElseThrow(ProductNotFoundException::new);
     }
 
     public Product saveProduct(Product product) {

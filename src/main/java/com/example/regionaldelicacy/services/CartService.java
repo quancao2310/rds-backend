@@ -42,18 +42,15 @@ public class CartService {
     public CartItemDto addToCart(CartDto cartDTO) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User authenticatedUser = (User) authentication.getPrincipal();
-        List<Product> product = this.productRepository.findByProductId(cartDTO.productId());
-        if (product == null || product.size() == 0) {
-            throw new ProductNotFoundException();
-        }
-        else if (product.get(0).getStock() < cartDTO.quantity()) {
+        Product product = productRepository.findById(cartDTO.productId()).orElseThrow(ProductNotFoundException::new);
+        if (product.getStock() < cartDTO.quantity()) {
             throw new ProductQuantityExceedException();
         }
         Cart cart = new Cart();
         cart.setUser(authenticatedUser);
-        cart.setProduct(product.get(0));
+        cart.setProduct(product);
         cart.setQuantity(cartDTO.quantity());
-        cart.setIntoMoney(cartDTO.quantity() * product.get(0).getPrice());
+        cart.setIntoMoney(cartDTO.quantity() * product.getPrice());
         cart.setDeleted(false);
         Cart cartItem = cartRepository.save(cart);
         return new CartItemDto(cartItem.getCartId(), cartItem.getProduct().getProductId(), cartItem.getQuantity(),

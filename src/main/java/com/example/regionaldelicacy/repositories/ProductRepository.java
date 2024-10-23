@@ -1,12 +1,13 @@
 package com.example.regionaldelicacy.repositories;
 
-import com.example.regionaldelicacy.models.Product;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 import java.util.List;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import com.example.regionaldelicacy.models.Product;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
-    List<Product> findByProductId(Long productId);
+    List<Product> findByCategory(String category);
 }
