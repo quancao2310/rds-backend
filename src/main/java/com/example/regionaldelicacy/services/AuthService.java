@@ -20,7 +20,7 @@ public class AuthService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) {
-        UserDetails user = userRepository.findByEmail(email);
+        User user = userRepository.findByEmail(email);
         if (user == null) {
             throw new UserNotFoundException();
         }
