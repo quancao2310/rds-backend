@@ -21,8 +21,8 @@ public record CreateProductDto(
 
     String imageUrl,
 
-    @NotBlank(message = "Category is required")
-    String category,
+    @NotNull(message = "Category ID is required")
+    Long categoryId,
 
     @NotBlank(message = "Brand is required")
     String brand,
@@ -37,7 +37,6 @@ public record CreateProductDto(
         product.setDescription(description());
         product.setPrice(price());
         product.setImageUrl(imageUrl());
-        product.setCategory(category());
         product.setBrand(brand());
         product.setStock(stock());
         return product;

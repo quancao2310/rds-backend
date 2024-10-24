@@ -32,6 +32,7 @@ public class AuthConfig {
                         .requestMatchers("/api/v1/samples*").permitAll() // Also for testing
                         .requestMatchers("/api/v1/products").permitAll()
                         .requestMatchers("/api/v1/products/*").permitAll()
+                        .requestMatchers("/api/v1/categories").permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
