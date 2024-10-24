@@ -78,7 +78,7 @@ public class DefaultExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorMessageForException> globalExceptionHandler(Exception ex, WebRequest request) {
-        log.severe("Exception: " + ex.getMessage());
+        log.severe("Exception: " + ex.getClass().getName());
         ErrorMessageForException message = new ErrorMessageForException(
                         HttpStatus.INTERNAL_SERVER_ERROR.value(),
                         new Date(),

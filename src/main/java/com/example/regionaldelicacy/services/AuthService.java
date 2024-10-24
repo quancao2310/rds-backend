@@ -3,13 +3,13 @@ package com.example.regionaldelicacy.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.regionaldelicacy.dto.SignUpDto;
 import com.example.regionaldelicacy.enums.UserRole;
 import com.example.regionaldelicacy.exceptions.DuplicateEmailException;
-import com.example.regionaldelicacy.exceptions.UserNotFoundException;
 import com.example.regionaldelicacy.models.User;
 import com.example.regionaldelicacy.repositories.UserRepository;
 
@@ -22,7 +22,7 @@ public class AuthService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) {
         User user = userRepository.findByEmail(email);
         if (user == null) {
-            throw new UserNotFoundException();
+            throw new UsernameNotFoundException("");
         }
         return user;
     }
