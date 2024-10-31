@@ -42,14 +42,14 @@ public class ProductService {
         String trimmedSearchTerm = searchTerm.trim();
 
         if (categoryParam == null) {
-            return productRepository.findByNameContainingIgnoreCase(trimmedSearchTerm);
+            return productRepository.findByNameContainingIgnoreCaseAndAccent(trimmedSearchTerm);
         }
 
         try {
             Long categoryId = Long.parseLong(categoryParam);
-            return productRepository.findByNameContainingIgnoreCaseAndCategoryCategoryId(trimmedSearchTerm, categoryId);
+            return productRepository.findByNameContainingIgnoreCaseAndAccentAndCategoryCategoryId(trimmedSearchTerm, categoryId);
         } catch (NumberFormatException e) {
-            return productRepository.findByNameContainingIgnoreCaseAndCategoryNameIgnoreCase(trimmedSearchTerm, categoryParam);
+            return productRepository.findByNameContainingIgnoreCaseAndAccentAndCategoryNameIgnoreCase(trimmedSearchTerm, categoryParam);
         }
     }
 
