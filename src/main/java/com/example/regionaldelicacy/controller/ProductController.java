@@ -44,20 +44,19 @@ public class ProductController {
         return new ResponseEntity<>(productResponse, HttpStatus.CREATED);
     }
 
-    @Operation(summary = "Get all products", description = "Retrieve a list of all products or filter by category")
+    @Operation(summary = "Get all products", description = "Retrieve a list of all products with optional search and category filters")
     @ApiResponse(responseCode = "200", description = "List of products")
     @GetMapping("")
     public ResponseEntity<List<ProductDto>> getAllProducts(
-            @Parameter(description = "Category to filter products") @RequestParam(required = false) Long category) {
-        List<Product> products = category == null ? 
-            productService.getAllProducts() : 
-            productService.getProductsByCategory(category);
+            @Parameter(description = "Category to filter products, can be the ID or the exact-matched, case-insensitive name of the category") @RequestParam(required = false) String category,
+            @Parameter(description = "Search term to filter products by name") @RequestParam(required = false) String search) {
+        List<Product> products = productService.searchProducts(search, category);
         List<ProductDto> productDtos = products.stream()
             .map(ProductDto::fromProduct)
             .toList();
         return ResponseEntity.ok(productDtos);
     }
-    
+
     @Operation(summary = "Get product by id", description = "Retrieve detailed information about a specific product")
     @ApiResponse(responseCode = "200", description = "Product details retrieved successfully")
     @ApiResponse(responseCode = "404", description = "Product not found")
