@@ -25,8 +25,32 @@ public class ProductService {
         return productRepository.findAll();
     }
 
-    public List<Product> getProductsByCategory(Long category) {
-        return productRepository.findByCategoryCategoryId(category);
+    public List<Product> getProductsByCategory(String categoryParam) {
+        try {
+            Long categoryId = Long.parseLong(categoryParam);
+            return productRepository.findByCategoryCategoryId(categoryId);
+        } catch (NumberFormatException e) {
+            return productRepository.findByCategoryNameIgnoreCase(categoryParam);
+        }
+    }
+
+    public List<Product> searchProducts(String searchTerm, String categoryParam) {
+        if (searchTerm == null || searchTerm.trim().isEmpty()) {
+            return categoryParam == null ? getAllProducts() : getProductsByCategory(categoryParam);
+        }
+
+        String trimmedSearchTerm = searchTerm.trim();
+
+        if (categoryParam == null) {
+            return productRepository.findByNameContainingIgnoreCase(trimmedSearchTerm);
+        }
+
+        try {
+            Long categoryId = Long.parseLong(categoryParam);
+            return productRepository.findByNameContainingIgnoreCaseAndCategoryCategoryId(trimmedSearchTerm, categoryId);
+        } catch (NumberFormatException e) {
+            return productRepository.findByNameContainingIgnoreCaseAndCategoryNameIgnoreCase(trimmedSearchTerm, categoryParam);
+        }
     }
 
     public Product getProductById(Long id) {
