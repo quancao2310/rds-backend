@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.regionaldelicacy.dto.OrderInfoDto;
@@ -31,8 +32,11 @@ public class OrderController {
     }
 
     @GetMapping
-    public ResponseEntity<List<OrderInfoDto>> getOrdersForCurrentUser() {
-        List<OrderInfoDto> orders = orderService.getOrdersByUserId();
+    public ResponseEntity<List<OrderInfoDto>> getOrdersForCurrentUser(
+        @RequestParam(defaultValue = "0") Integer page,
+        @RequestParam(defaultValue = "10") Integer size
+    ) {
+        List<OrderInfoDto> orders = orderService.getOrdersByUserId(page, size);
         return ResponseEntity.ok(orders);
     }
 

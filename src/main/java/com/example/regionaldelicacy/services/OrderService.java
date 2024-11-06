@@ -26,6 +26,8 @@ import com.example.regionaldelicacy.repositories.DiscountCodeRepository;
 import com.example.regionaldelicacy.repositories.OrderInfoRepository;
 import com.example.regionaldelicacy.repositories.ProductRepository;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 
 import lombok.RequiredArgsConstructor;
@@ -135,10 +137,11 @@ public class OrderService {
         return getOrderInfo(newOrder);
     }
 
-    public List<OrderInfoDto> getOrdersByUserId() {
+    public List<OrderInfoDto> getOrdersByUserId(Integer page, Integer size) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
-        List<OrderInfo> orders = orderRepository.findByUserUserId(user.getUserId());
+        Pageable paging = PageRequest.of(page, size);
+        List<OrderInfo> orders = orderRepository.findByUserUserId(user.getUserId(), paging);
         List<OrderInfoDto> orderInfoLst = orders.stream().map(order -> getOrderInfo(order)).collect(Collectors.toList());
         return orderInfoLst;
     }
