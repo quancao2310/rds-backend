@@ -61,8 +61,11 @@ public class OrderService {
                 .address(order.getAddress())
                 .phoneNumber(order.getPhoneNumber())
                 .email(order.getEmail())
+                .orderDate(order.getCreatedAt())
                 .totalPrice(order.getTotalPrice())
                 .items(items)
+                .paymentStatus(order.getPaymentStatus())
+                .orderStatus(order.getOrderStatus())
                 .build();
         if (order.getDiscountCode() != null) {
             orderInfo.setDiscountCode(order.getDiscountCode().getCode());
