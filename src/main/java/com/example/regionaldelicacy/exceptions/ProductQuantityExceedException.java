@@ -4,6 +4,6 @@ import org.springframework.http.HttpStatus;
 
 public class ProductQuantityExceedException extends CustomDefineException {
     public ProductQuantityExceedException() {
-        super("The input quantity exceeds the number in stock", HttpStatus.BAD_REQUEST);
+        super("The required quantity for the product exceeds the number in stock", HttpStatus.BAD_REQUEST);
     }
 }
