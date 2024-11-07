@@ -11,4 +11,6 @@ public interface CartRepository extends JpaRepository<Cart, Long> {
     List<Cart> findByUserUserIdAndDeletedFalse(Long userId);
 
     List<Cart> findByCartIdAndUserUserIdAndDeletedFalse(Long cartId, Long userId);
+
+    List<Cart> findAllByCartIdInAndDeletedFalse(List<Long> cartIds);
 }

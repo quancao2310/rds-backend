@@ -12,6 +12,7 @@ import com.example.regionaldelicacy.models.Product;
 public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findByCategoryCategoryId(Long categoryId);
     List<Product> findByCategoryNameIgnoreCase(String categoryName);
+    Product findByProductId(Long productId);
 
     // Search by name
     @Query(value = """
