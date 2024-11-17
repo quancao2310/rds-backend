@@ -10,7 +10,6 @@ pool:
   vmImage: ubuntu-latest
 
 variables:
-  - group: 'AWS Secrets'
   - name: MAVEN_CACHE_FOLDER
     value: $(Pipeline.Workspace)/.m2/repository
   - name: MAVEN_OPTS
@@ -59,33 +58,4 @@ steps:
     EC2_HOST: $(EC2_HOST)
     EC2_USER: $(EC2_USER)
     EC2_KEY: $(EC2_KEY)
-
-# - task: S3Upload@1
-#   displayName: Upload jar file to AWS S3 Bucket
-#   inputs:
-#     bucketName: '$(AWS_S3_BUCKET)'
-#     sourceFolder: '$(Build.ArtifactStagingDirectory)'
-#     globExpressions: '**/*.jar'
-#     flattenFolders: true
-#   env:
-#     AWS_ACCESS_KEY_ID: $(AWS_ACCESS_KEY_ID)
-#     AWS_SECRET_ACCESS_KEY: $(AWS_SECRET_ACCESS_KEY)
-#     AWS_REGION: $(AWS_REGION)
-#     AWS_S3_BUCKET: $(AWS_S3_BUCKET)
-
-# - task: BeanstalkDeployApplication@1
-#   displayName: Deploy application to AWS Elastic Beanstalk
-#   inputs:
-#     applicationName: '$(AWS_ELASTICBEANSTALK_APPLICATION_NAME)'
-#     environmentName: '$(AWS_ELASTICBEANSTALK_ENVIRONMENT_NAME)'
-#     applicationType: 's3'
-#     deploymentBundleBucket: '$(AWS_S3_BUCKET)'
-#     deploymentBundleKey: 'regional-delicacy-0.0.1-SNAPSHOT.jar'
-#     versionLabel: 'v$(Build.BuildId)'
-#   env:
-#     AWS_ACCESS_KEY_ID: $(AWS_ACCESS_KEY_ID)
-#     AWS_SECRET_ACCESS_KEY: $(AWS_SECRET_ACCESS_KEY)
-#     AWS_REGION: $(AWS_REGION)
-#     AWS_S3_BUCKET: $(AWS_S3_BUCKET)
-#     AWS_ELASTICBEANSTALK_APPLICATION_NAME: $(AWS_ELASTICBEANSTALK_APPLICATION_NAME)
-#     AWS_ELASTICBEANSTALK_ENVIRONMENT_NAME: $(AWS_ELASTICBEANSTALK_ENVIRONMENT_NAME)
+  displayName: Deploy on AWS EC2
