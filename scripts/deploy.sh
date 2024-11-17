@@ -13,7 +13,7 @@ trap 'rm -f ec2_key.pem' EXIT
 echo "Deploying to EC2 instance at $EC2_HOST"
 
 # Create a new key file with the contents of the EC2_KEY secret
-echo "$EC2_KEY" > ec2_key.pem
+echo -e "$EC2_KEY" > ec2_key.pem
 chmod 400 ec2_key.pem
 
 # Copy the files to the EC2 instance
