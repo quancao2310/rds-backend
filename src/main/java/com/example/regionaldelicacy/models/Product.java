@@ -1,5 +1,6 @@
 package com.example.regionaldelicacy.models;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -21,9 +22,17 @@ public class Product extends BaseModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long productId;
+
+    @Column(nullable = false)
     private String name;
+
+    @Column(columnDefinition = "TEXT")
     private String description;
+
+    @Column(nullable = false)
     private Double price;
+
+    @Column(nullable = false)
     private String imageUrl;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -4,9 +4,6 @@ import java.util.List;
 
 import com.example.regionaldelicacy.enums.OrderStatus;
 import com.example.regionaldelicacy.enums.PaymentStatus;
-import com.fasterxml.jackson.annotation.JsonFormat;
-
-import java.util.Date;
 
 import lombok.Builder;
 import lombok.Data;
@@ -19,8 +16,7 @@ public class OrderInfoDto {
     private String address;
     private String phoneNumber;
     private String email;
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-    private Date orderDate;
+    private String orderDate;
     private String discountCode;
     private Double totalPrice;
     private PaymentStatus paymentStatus;

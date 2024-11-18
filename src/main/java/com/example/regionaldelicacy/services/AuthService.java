@@ -1,10 +1,8 @@
 package com.example.regionaldelicacy.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.regionaldelicacy.dto.SignUpDto;
@@ -13,25 +11,27 @@ import com.example.regionaldelicacy.exceptions.DuplicateEmailException;
 import com.example.regionaldelicacy.models.User;
 import com.example.regionaldelicacy.repositories.UserRepository;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class AuthService implements UserDetailsService {
-    @Autowired
-    UserRepository userRepository;
+
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
-    public UserDetails loadUserByUsername(String email) {
-        User user = userRepository.findByEmail(email);
-        if (user == null) {
-            throw new UsernameNotFoundException("");
-        }
-        return user;
+    public User loadUserByUsername(String email) throws UsernameNotFoundException {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException(""));
     }
 
-    public UserDetails signUp(SignUpDto data) throws DuplicateEmailException {
-        if (userRepository.findByEmail(data.email()) != null) {
+    public User signUp(SignUpDto data) {
+        if (userRepository.findByEmail(data.getEmail()).isPresent()) {
             throw new DuplicateEmailException();
         }
-        String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
+
+        String encryptedPassword = passwordEncoder.encode(data.getPassword());
         User newUser = new User(data, encryptedPassword, UserRole.USER);
         return userRepository.save(newUser);
     }

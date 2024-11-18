@@ -1,5 +1,7 @@
 package com.example.regionaldelicacy.security;
 
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -9,19 +11,24 @@ import com.auth0.jwt.exceptions.AlgorithmMismatchException;
 import com.auth0.jwt.exceptions.InvalidClaimException;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.example.regionaldelicacy.exceptions.InvalidTokenException;
+import com.example.regionaldelicacy.exceptions.InvalidJwtException;
 import com.example.regionaldelicacy.models.User;
 
 @Service
-public class TokenProvider {
+public class JwtProvider {
+
     @Value("${security.jwt.token.secret-key}")
     private String JWT_SECRET;
+
+    @Value("${security.jwt.token.expire-length}")
+    private long JWT_EXPIRE_LENGTH;
 
     public String generateAccessToken(User user) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(JWT_SECRET);
             return JWT.create()
                     .withClaim("userId", user.getUserId())
+                    .withExpiresAt(new Date(System.currentTimeMillis() + JWT_EXPIRE_LENGTH))
                     .sign(algorithm);
         } catch (JWTCreationException exception) {
             throw new JWTCreationException("Error while generating token", exception);
@@ -31,9 +38,13 @@ public class TokenProvider {
     public Long validatedToken(String token) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(JWT_SECRET);
-            return JWT.require(algorithm).build().verify(token).getClaim("userId").asLong();
+            return JWT.require(algorithm)
+                    .build()
+                    .verify(token)
+                    .getClaim("userId")
+                    .asLong();
         } catch (AlgorithmMismatchException | InvalidClaimException exception) {
-            throw new InvalidTokenException();
+            throw new InvalidJwtException();
         } catch (JWTVerificationException exception) {
             throw new JWTVerificationException("Error while validating token", exception);
         }

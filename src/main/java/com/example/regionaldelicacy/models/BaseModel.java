@@ -1,14 +1,13 @@
 package com.example.regionaldelicacy.models;
 
-import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.util.Date;
+import java.time.Instant;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.example.regionaldelicacy.serializers.InstantSerializer;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
@@ -18,13 +17,15 @@ import lombok.Data;
 @Data
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public abstract class BaseModel implements Serializable {
+public abstract class BaseModel {
+
     @CreatedDate
     @Column(nullable = false, updatable = false)
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-    private Date createdAt;
+    @JsonSerialize(using = InstantSerializer.class)
+    private Instant createdAt;
 
     @LastModifiedDate
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-    private LocalDateTime updatedAt;
+    @Column(nullable = false)
+    @JsonSerialize(using = InstantSerializer.class)
+    private Instant updatedAt;
 }

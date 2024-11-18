@@ -1,13 +1,14 @@
 package com.example.regionaldelicacy.repositories;
 
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import com.example.regionaldelicacy.models.User;
 
+@Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-    User findByUserId(Long userId);
-
-    User findByName(String userName);
-
-    User findByEmail(String email);
+    Optional<User> findByName(String name);
+    Optional<User> findByEmail(String email);
 }
