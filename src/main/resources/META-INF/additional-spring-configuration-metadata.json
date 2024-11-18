@@ -6,6 +6,11 @@
       "description": "JWT Secret Key"
     },
     {
+      "name": "security.jwt.token.expire-length",
+      "type": "java.lang.Long",
+      "description": "JWT Token Expire Length (milliseconds)"
+    },
+    {
       "name": "cors.allowed-origins",
       "type": "java.lang.List<java.lang.String>",
       "description": "A comma-separated list of CORS Allowed Origins"

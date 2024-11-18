@@ -63,7 +63,7 @@ public class OrderService {
                 .address(order.getAddress())
                 .phoneNumber(order.getPhoneNumber())
                 .email(order.getEmail())
-                .orderDate(order.getCreatedAt())
+                .orderDate(order.getCreatedAt().toString())
                 .totalPrice(order.getTotalPrice())
                 .items(items)
                 .paymentStatus(order.getPaymentStatus())
