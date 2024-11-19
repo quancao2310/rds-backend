@@ -4,6 +4,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.regionaldelicacy.dto.CreateProductDto;
+import com.example.regionaldelicacy.dto.FavoriteAddDto;
+import com.example.regionaldelicacy.dto.FavoriteInfoDto;
 import com.example.regionaldelicacy.dto.ProductDto;
 import com.example.regionaldelicacy.models.Product;
 import com.example.regionaldelicacy.services.ProductService;
@@ -20,12 +22,12 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-
 
 @RestController
 @RequestMapping("/api/v1/products")
@@ -52,8 +54,8 @@ public class ProductController {
             @Parameter(description = "Search term to filter products by name") @RequestParam(required = false) String search) {
         List<Product> products = productService.searchProducts(search, category);
         List<ProductDto> productDtos = products.stream()
-            .map(ProductDto::fromProduct)
-            .toList();
+                .map(ProductDto::fromProduct)
+                .toList();
         return ResponseEntity.ok(productDtos);
     }
 
@@ -65,4 +67,30 @@ public class ProductController {
         Product product = productService.getProductById(id);
         return ResponseEntity.ok(ProductDto.fromProduct(product));
     }
+
+    @Operation(summary = "Get favorite products", description = "Retrieve a list of products that current user has marked as their favorite.")
+    @ApiResponse(responseCode = "200", description = "List of favorite products")
+    @GetMapping("/favorites")
+    public ResponseEntity<List<FavoriteInfoDto>> getFavoriteProducts(
+        @RequestParam(defaultValue = "0") Integer page,
+        @RequestParam(defaultValue = "10") Integer size
+    ) {
+        List<FavoriteInfoDto> favoriteProducts = productService.getFavoriteProducts(page, size);
+        return ResponseEntity.ok(favoriteProducts);
+    }
+
+    @Operation(summary = "Add favorite product", description = "Add a new product to user's favorite product list")
+    @ApiResponse(responseCode = "201", description = "Product added to the list")
+    @PostMapping("/favorites")
+    public ResponseEntity<FavoriteInfoDto> addFavoriteProduct(@RequestBody @Valid FavoriteAddDto favoriteAddDto) {
+        FavoriteInfoDto favoriteProduct = productService.addFavoriteProduct(favoriteAddDto.productId());
+        return new ResponseEntity<>(favoriteProduct, HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/favorites/{favoriteId}")
+    public ResponseEntity<Void> removeFavoriteProduct(@PathVariable Long favoriteId) {
+        productService.removeFavoriteProduct(favoriteId);
+        return ResponseEntity.ok().build();
+    }
+
 }
