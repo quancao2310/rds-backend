@@ -1,5 +1,6 @@
 package com.example.regionaldelicacy.models;
 
+import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
 
@@ -9,6 +10,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.example.regionaldelicacy.dto.SignUpDto;
 import com.example.regionaldelicacy.enums.UserRole;
+import com.example.regionaldelicacy.serializers.InstantSerializer;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -44,6 +47,9 @@ public class User extends BaseModel implements UserDetails {
     private String city;
     private String country;
 
+    @JsonSerialize(using = InstantSerializer.class)
+    private Instant lastLogin;
+
     @Enumerated(EnumType.STRING)
     private UserRole role = UserRole.USER;
 
@@ -74,5 +80,25 @@ public class User extends BaseModel implements UserDetails {
     @Override
     public String getPassword() {
         return password;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }

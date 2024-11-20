@@ -6,6 +6,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
@@ -60,11 +61,27 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorResponse, headers, status);
     }
 
+    @Override
+    protected ResponseEntity<Object> handleHttpMessageNotReadable(
+            HttpMessageNotReadableException ex,
+            HttpHeaders headers,
+            HttpStatusCode status,
+            WebRequest request) {
+        log.error("HTTP message not readable exception occurred: {}", ex.getMessage(), ex);
+
+        ErrorResponse errorResponse = new ErrorResponse(
+            HttpStatus.BAD_REQUEST.value(),
+            "Required request body is missing or invalid!",
+            request.getDescription(false)
+        );
+        return new ResponseEntity<>(errorResponse, headers, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<ErrorResponse> handleBadCredentialsException(
             BadCredentialsException ex,
             WebRequest request) {
-        log.error("{} with status 401: {}", ex.getClass().getName(), ex.getMessage());
+        log.error("{}: {}", ex.getClass().getName(), ex.getMessage());
 
         ErrorResponse errorResponse = new ErrorResponse(
             HttpStatus.UNAUTHORIZED.value(),
@@ -75,7 +92,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<ErrorResponse> badCredentialsExceptionHandler(
+    public ResponseEntity<ErrorResponse> handleBadCredentialsException(
             AccessDeniedException ex,
             WebRequest request) {
         log.error("{} with status 403: {}", ex.getClass().getName(), ex.getMessage());
@@ -103,7 +120,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> globalExceptionHandler(Exception ex, WebRequest request) {
+    public ResponseEntity<ErrorResponse> handleGlobalException(Exception ex, WebRequest request) {
         log.error("Exception {}: {}", ex.getClass().getName(), ex.getMessage(), ex);
 
         ErrorResponse errorResponse = new ErrorResponse(

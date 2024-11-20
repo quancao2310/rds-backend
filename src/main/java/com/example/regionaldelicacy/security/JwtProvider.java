@@ -7,11 +7,8 @@ import org.springframework.stereotype.Service;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.exceptions.AlgorithmMismatchException;
-import com.auth0.jwt.exceptions.InvalidClaimException;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.example.regionaldelicacy.exceptions.InvalidJwtException;
 import com.example.regionaldelicacy.models.User;
 
 @Service
@@ -35,18 +32,12 @@ public class JwtProvider {
         }
     }
 
-    public Long validatedToken(String token) {
-        try {
-            Algorithm algorithm = Algorithm.HMAC256(JWT_SECRET);
-            return JWT.require(algorithm)
-                    .build()
-                    .verify(token)
-                    .getClaim("userId")
-                    .asLong();
-        } catch (AlgorithmMismatchException | InvalidClaimException exception) {
-            throw new InvalidJwtException();
-        } catch (JWTVerificationException exception) {
-            throw new JWTVerificationException("Error while validating token", exception);
-        }
+    public Long validatedToken(String token) throws JWTVerificationException {
+        Algorithm algorithm = Algorithm.HMAC256(JWT_SECRET);
+        return JWT.require(algorithm)
+                .build()
+                .verify(token)
+                .getClaim("userId")
+                .asLong();
     }
 }
