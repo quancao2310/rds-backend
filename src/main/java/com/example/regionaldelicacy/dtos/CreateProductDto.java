@@ -1,4 +1,4 @@
-package com.example.regionaldelicacy.dto;
+package com.example.regionaldelicacy.dtos;
 
 import com.example.regionaldelicacy.models.Product;
 
@@ -12,7 +12,7 @@ public record CreateProductDto(
     @Size(min = 2, max = 100, message = "Name must be between 2 and 100 characters")
     String name,
 
-    @Size(max = 500, message = "Description must be less than 500 characters")
+    @Size(max = 1000, message = "Description must be less than 1000 characters")
     String description,
 
     @NotNull(message = "Price is required")

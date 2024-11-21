@@ -11,8 +11,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.regionaldelicacy.dto.CreateProductDto;
-import com.example.regionaldelicacy.dto.FavoriteInfoDto;
+import com.example.regionaldelicacy.dtos.CreateProductDto;
+import com.example.regionaldelicacy.dtos.FavoriteInfoDto;
 import com.example.regionaldelicacy.exceptions.CategoryNotFoundException;
 import com.example.regionaldelicacy.exceptions.ProductNotFoundException;
 import com.example.regionaldelicacy.models.Favorite;

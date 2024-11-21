@@ -1,4 +1,4 @@
-package com.example.regionaldelicacy.controller;
+package com.example.regionaldelicacy.controllers;
 
 import java.util.List;
 

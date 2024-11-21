@@ -1,7 +1,7 @@
 package com.example.regionaldelicacy.services;
 
-import com.example.regionaldelicacy.dto.CartDto;
-import com.example.regionaldelicacy.dto.CartItemDto;
+import com.example.regionaldelicacy.dtos.CartDto;
+import com.example.regionaldelicacy.dtos.CartItemDto;
 import com.example.regionaldelicacy.exceptions.ProductNotFoundException;
 import com.example.regionaldelicacy.exceptions.ProductQuantityExceedException;
 import com.example.regionaldelicacy.models.Cart;

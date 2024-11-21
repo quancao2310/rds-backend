@@ -1,4 +1,4 @@
-package com.example.regionaldelicacy.dto;
+package com.example.regionaldelicacy.dtos;
 
 import java.time.Instant;
 

@@ -1,4 +1,4 @@
-package com.example.regionaldelicacy.dto;
+package com.example.regionaldelicacy.dtos;
 
 import com.example.regionaldelicacy.validators.ValidPassword;
 

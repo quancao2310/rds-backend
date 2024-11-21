@@ -1,4 +1,4 @@
-package com.example.regionaldelicacy.controller;
+package com.example.regionaldelicacy.controllers;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.regionaldelicacy.dto.OrderInfoDto;
-import com.example.regionaldelicacy.dto.OrderRequestDto;
+import com.example.regionaldelicacy.dtos.OrderInfoDto;
+import com.example.regionaldelicacy.dtos.OrderRequestDto;
 import com.example.regionaldelicacy.services.OrderService;
 
 import io.swagger.v3.oas.annotations.Operation;

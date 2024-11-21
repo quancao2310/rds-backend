@@ -1,7 +1,7 @@
-package com.example.regionaldelicacy.controller;
+package com.example.regionaldelicacy.controllers;
 
-import com.example.regionaldelicacy.dto.CartDto;
-import com.example.regionaldelicacy.dto.CartItemDto;
+import com.example.regionaldelicacy.dtos.CartDto;
+import com.example.regionaldelicacy.dtos.CartItemDto;
 import com.example.regionaldelicacy.services.CartService;
 
 import io.swagger.v3.oas.annotations.Operation;

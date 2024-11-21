@@ -1,12 +1,12 @@
-package com.example.regionaldelicacy.controller;
+package com.example.regionaldelicacy.controllers;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.regionaldelicacy.dto.CreateProductDto;
-import com.example.regionaldelicacy.dto.FavoriteAddDto;
-import com.example.regionaldelicacy.dto.FavoriteInfoDto;
-import com.example.regionaldelicacy.dto.ProductDto;
+import com.example.regionaldelicacy.dtos.CreateProductDto;
+import com.example.regionaldelicacy.dtos.FavoriteAddDto;
+import com.example.regionaldelicacy.dtos.FavoriteInfoDto;
+import com.example.regionaldelicacy.dtos.ProductDto;
 import com.example.regionaldelicacy.models.Product;
 import com.example.regionaldelicacy.services.ProductService;
 

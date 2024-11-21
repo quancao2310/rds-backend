@@ -5,7 +5,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.example.regionaldelicacy.dto.SignUpDto;
+import com.example.regionaldelicacy.dtos.SignUpDto;
 import com.example.regionaldelicacy.enums.UserRole;
 import com.example.regionaldelicacy.exceptions.DuplicateEmailException;
 import com.example.regionaldelicacy.models.User;

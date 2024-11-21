@@ -1,9 +1,9 @@
-package com.example.regionaldelicacy.controller;
+package com.example.regionaldelicacy.controllers;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.regionaldelicacy.dto.UserDetailsDto;
+import com.example.regionaldelicacy.dtos.UserDetailsDto;
 import com.example.regionaldelicacy.models.User;
 
 import io.swagger.v3.oas.annotations.tags.Tag;

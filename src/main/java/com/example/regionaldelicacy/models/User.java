@@ -8,7 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.example.regionaldelicacy.dto.SignUpDto;
+import com.example.regionaldelicacy.dtos.SignUpDto;
 import com.example.regionaldelicacy.enums.UserRole;
 import com.example.regionaldelicacy.serializers.InstantSerializer;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;

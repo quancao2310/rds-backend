@@ -1,4 +1,4 @@
-package com.example.regionaldelicacy.controller;
+package com.example.regionaldelicacy.controllers;
 
 import java.time.Instant;
 
@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.regionaldelicacy.dto.JwtResponseDto;
-import com.example.regionaldelicacy.dto.SignInDto;
-import com.example.regionaldelicacy.dto.SignUpDto;
+import com.example.regionaldelicacy.dtos.JwtResponseDto;
+import com.example.regionaldelicacy.dtos.SignInDto;
+import com.example.regionaldelicacy.dtos.SignUpDto;
 import com.example.regionaldelicacy.exceptions.ErrorResponse;
 import com.example.regionaldelicacy.models.User;
 import com.example.regionaldelicacy.repositories.UserRepository;
