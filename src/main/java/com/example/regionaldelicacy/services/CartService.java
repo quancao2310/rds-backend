@@ -2,6 +2,8 @@ package com.example.regionaldelicacy.services;
 
 import com.example.regionaldelicacy.dtos.CartDto;
 import com.example.regionaldelicacy.dtos.CartItemDto;
+import com.example.regionaldelicacy.dtos.CartUpdateDto;
+import com.example.regionaldelicacy.exceptions.CartItemNotValidException;
 import com.example.regionaldelicacy.exceptions.ProductNotFoundException;
 import com.example.regionaldelicacy.exceptions.ProductQuantityExceedException;
 import com.example.regionaldelicacy.models.Cart;
@@ -10,7 +12,10 @@ import com.example.regionaldelicacy.models.User;
 import com.example.regionaldelicacy.repositories.CartRepository;
 import com.example.regionaldelicacy.repositories.ProductRepository;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -19,22 +24,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class CartService {
 
-    @Autowired
-    private CartRepository cartRepository;
+    private final CartRepository cartRepository;
+    private final ProductRepository productRepository;
 
-    @Autowired
-    private ProductRepository productRepository;
-
-    public List<CartItemDto> getActiveCartsByAuthenticatedUser() {
+    public List<CartItemDto> getActiveCartsByAuthenticatedUser(Integer page, Integer size) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User authenticatedUser = (User) authentication.getPrincipal();
-        List<Cart> cartItems = cartRepository.findByUserUserIdAndDeletedFalse(authenticatedUser.getUserId());
+        Pageable paging = PageRequest.of(page, size);
+        List<Cart> cartItems = cartRepository.findByUserUserIdAndDeletedFalse(authenticatedUser.getUserId(), paging);
         List<CartItemDto> cartItemsInfo = new ArrayList<CartItemDto>();
         for (Cart cartItem : cartItems) {
-            cartItemsInfo.add(new CartItemDto(cartItem.getCartId(), cartItem.getProduct().getProductId(),
-                    cartItem.getQuantity(), cartItem.getIntoMoney()));
+            cartItemsInfo.add(CartItemDto.fromCart(cartItem));
         }
         return cartItemsInfo;
     }
@@ -53,19 +56,37 @@ public class CartService {
         cart.setIntoMoney(cartDTO.quantity() * product.getPrice());
         cart.setDeleted(false);
         Cart cartItem = cartRepository.save(cart);
-        return new CartItemDto(cartItem.getCartId(), cartItem.getProduct().getProductId(), cartItem.getQuantity(),
-                cartItem.getIntoMoney());
+        return CartItemDto.fromCart(cartItem);
+    }
+
+    public CartItemDto updateCartItem(CartUpdateDto cartUpdateDto) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User authenticatedUser = (User) authentication.getPrincipal();
+        Cart cart = this.cartRepository.findByCartIdAndUserUserIdAndDeletedFalse(cartUpdateDto.cartId(),
+                authenticatedUser.getUserId());
+        if (cart == null) {
+            throw new CartItemNotValidException();
+        }
+        Product product = cart.getProduct();
+        if (product.getStock() < cartUpdateDto.quantity()) {
+            throw new ProductQuantityExceedException();
+        }
+        cart.setQuantity(cartUpdateDto.quantity());
+        cart.setIntoMoney(cartUpdateDto.quantity() * product.getPrice());
+        Cart updatedCart = cartRepository.save(cart);
+        return CartItemDto.fromCart(updatedCart);
     }
 
     public void softDeleteCart(Long cartId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User authenticatedUser = (User) authentication.getPrincipal();
-        List<Cart> carts = this.cartRepository.findByCartIdAndUserUserIdAndDeletedFalse(cartId,
+        Cart cart = this.cartRepository.findByCartIdAndUserUserIdAndDeletedFalse(cartId,
                 authenticatedUser.getUserId());
-        for (Cart cart : carts) {
-            cart.setDeleted(true);
-            cartRepository.save(cart);
+        if (cart == null) {
+            throw new CartItemNotValidException();
         }
+        cart.setDeleted(true);
+        cartRepository.save(cart);
     }
 
 }
