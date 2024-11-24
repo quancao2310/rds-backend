@@ -4,6 +4,6 @@ import org.springframework.http.HttpStatus;
 
 public class InvalidJwtException extends CustomException {
     public InvalidJwtException() {
-        super("Auth token is invalid", HttpStatus.UNAUTHORIZED);
+        super("Authentication credentials are invalid or not found", HttpStatus.UNAUTHORIZED);
     }
 }

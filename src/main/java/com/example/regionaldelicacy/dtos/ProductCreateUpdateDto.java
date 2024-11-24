@@ -6,39 +6,42 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.Data;
 
-public record CreateProductDto(
+@Data
+public class ProductCreateUpdateDto {
     @NotBlank(message = "Name is required")
     @Size(min = 2, max = 100, message = "Name must be between 2 and 100 characters")
-    String name,
+    private String name;
 
     @Size(max = 1000, message = "Description must be less than 1000 characters")
-    String description,
+    private String description;
 
     @NotNull(message = "Price is required")
     @Min(value = 0, message = "Price must be greater than 0")
-    Double price,
+    private Double price;
 
-    String imageUrl,
+    @NotNull(message = "Image URL is required")
+    private String imageUrl;
 
     @NotNull(message = "Category ID is required")
-    Long categoryId,
+    private Long categoryId;
 
     @NotBlank(message = "Brand is required")
-    String brand,
+    private String brand;
 
     @NotNull(message = "Stock is required")
     @Min(value = 0, message = "Stock must be greater than 0")
-    Integer stock
-) {
+    private Integer stock;
+
     public Product toProduct() {
         Product product = new Product();
-        product.setName(name());
-        product.setDescription(description());
-        product.setPrice(price());
-        product.setImageUrl(imageUrl());
-        product.setBrand(brand());
-        product.setStock(stock());
+        product.setName(getName());
+        product.setDescription(getDescription());
+        product.setPrice(getPrice());
+        product.setImageUrl(getImageUrl());
+        product.setBrand(getBrand());
+        product.setStock(getStock());
         return product;
     }
 }

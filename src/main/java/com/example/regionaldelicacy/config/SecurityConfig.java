@@ -52,10 +52,14 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/auth/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/v1/books").hasRole("ADMIN") // API just for authorization testing, should be removed later
-                        .requestMatchers("/api/v1/samples*").permitAll() // Also for testing
-                        .requestMatchers("/api/v1/products", "/api/v1/products/*").permitAll()
-                        .requestMatchers("/api/v1/categories").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/products", "/api/v1/products/{id:[0-9]+}").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/products").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/products/{id:[0-9]+}").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/v1/products/{id:[0-9]+}").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/categories", "/api/v1/categories/{id:[0-9]+}").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/categories").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/categories/{id:[0-9]+}").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/v1/categories/{id:[0-9]+}").hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .build();
     }
