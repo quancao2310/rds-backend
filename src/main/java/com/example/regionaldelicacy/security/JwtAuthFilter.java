@@ -2,30 +2,33 @@ package com.example.regionaldelicacy.security;
 
 import java.io.IOException;
 
+import org.springframework.context.ApplicationContext;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.example.regionaldelicacy.exceptions.ErrorResponse;
+import com.example.regionaldelicacy.exceptions.InvalidJwtException;
 import com.example.regionaldelicacy.models.User;
 import com.example.regionaldelicacy.repositories.UserRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final JwtProvider jwtProvider;
     private final UserRepository userRepository;
-    private final ObjectMapper objectMapper;
+    private final ApplicationContext applicationContext;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -42,17 +45,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 );
                 SecurityContextHolder.getContext().setAuthentication(auth);
             } catch (JWTVerificationException e) {
-                ErrorResponse errorResponse = new ErrorResponse(
-                    HttpServletResponse.SC_UNAUTHORIZED,
-                    "Invalid JWT token",
-                    request.getRequestURI()
-                );
-
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                response.setContentType("application/json");
-
-                // ObjectMapper mapper = new ObjectMapper();
-                response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
+                log.error("{}: {}", e.getClass().getName(), e.getMessage());
+                HandlerExceptionResolver resolver = applicationContext.getBean("handlerExceptionResolver", HandlerExceptionResolver.class);
+                resolver.resolveException(request, response, null, new InvalidJwtException());
                 return;
             }
         }

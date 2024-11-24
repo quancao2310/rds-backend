@@ -10,8 +10,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.example.regionaldelicacy.dtos.SignUpDto;
 import com.example.regionaldelicacy.enums.UserRole;
-import com.example.regionaldelicacy.serializers.InstantSerializer;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -46,8 +44,6 @@ public class User extends BaseModel implements UserDetails {
     private String address;
     private String city;
     private String country;
-
-    @JsonSerialize(using = InstantSerializer.class)
     private Instant lastLogin;
 
     @Enumerated(EnumType.STRING)

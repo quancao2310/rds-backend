@@ -21,6 +21,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import com.example.regionaldelicacy.security.CustomAuthenticationEntryPoint;
 import com.example.regionaldelicacy.security.JwtAuthFilter;
 
 import lombok.RequiredArgsConstructor;
@@ -37,6 +38,7 @@ public class SecurityConfig {
     private final long MAX_AGE = 3600L;
 
     private final JwtAuthFilter jwtAuthFilter;
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -45,14 +47,14 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling(exceptionHandling -> exceptionHandling
+                        .authenticationEntryPoint(customAuthenticationEntryPoint))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/auth/**").permitAll()
-                        .requestMatchers("/api/v1/users/me").authenticated()
                         .requestMatchers(HttpMethod.POST, "/api/v1/books").hasRole("ADMIN") // API just for authorization testing, should be removed later
                         .requestMatchers("/api/v1/samples*").permitAll() // Also for testing
-                        .requestMatchers("/api/v1/products").permitAll()
-                        .requestMatchers("/api/v1/products/*").permitAll()
+                        .requestMatchers("/api/v1/products", "/api/v1/products/*").permitAll()
                         .requestMatchers("/api/v1/categories").permitAll()
                         .anyRequest().authenticated())
                 .build();

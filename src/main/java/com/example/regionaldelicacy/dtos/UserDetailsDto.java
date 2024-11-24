@@ -3,8 +3,6 @@ package com.example.regionaldelicacy.dtos;
 import java.time.Instant;
 
 import com.example.regionaldelicacy.models.User;
-import com.example.regionaldelicacy.serializers.InstantSerializer;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,7 +19,6 @@ public class UserDetailsDto {
     private String address;
     private String city;
     private String country;
-    @JsonSerialize(using = InstantSerializer.class)
     private Instant lastLogin;
     private String role;
 
