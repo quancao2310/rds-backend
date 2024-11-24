@@ -1,7 +1,7 @@
 package com.example.regionaldelicacy.repositories;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -10,29 +10,47 @@ import com.example.regionaldelicacy.models.Product;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
-    List<Product> findByCategoryCategoryId(Long categoryId);
-    List<Product> findByCategoryNameIgnoreCase(String categoryName);
+    Page<Product> findByCategoryId(Long categoryId, Pageable pageable);
+    Page<Product> findByCategoryNameIgnoreCase(String categoryName, Pageable pageable);
     Product findByProductId(Long productId);
 
     // Search by name
     @Query(value = """
             SELECT p.* FROM product p
             WHERE LOWER(unaccent(p.name)) LIKE LOWER(unaccent(CONCAT('%', :name, '%')))
-            """, nativeQuery = true)
-    List<Product> findByNameContainingIgnoreCaseAndAccent(String name);
+            """,
+            countQuery = """
+            SELECT COUNT(*) FROM product p
+            WHERE LOWER(unaccent(p.name)) LIKE LOWER(unaccent(CONCAT('%', :name, '%')))
+            """,
+            nativeQuery = true)
+    Page<Product> findByNameContainingIgnoreCaseAndAccent(String name, Pageable pageable);
 
     @Query(value = """
-            SELECT p.* FROM product p 
+            SELECT p.* FROM product p
+            WHERE LOWER(unaccent(p.name)) LIKE LOWER(unaccent(CONCAT('%', :name, '%')))
+            AND p.category_id = :categoryId
+            """,
+            countQuery = """
+            SELECT COUNT(*) FROM product p 
             WHERE LOWER(unaccent(p.name)) LIKE LOWER(unaccent(CONCAT('%', :name, '%'))) 
             AND p.category_id = :categoryId
-            """, nativeQuery = true)
-    List<Product> findByNameContainingIgnoreCaseAndAccentAndCategoryCategoryId(String name, Long categoryId);
+            """,
+            nativeQuery = true)
+    Page<Product> findByNameContainingIgnoreCaseAndAccentAndCategoryId(String name, Long categoryId, Pageable pageable);
 
     @Query(value = """
-            SELECT p.* FROM product p 
-            JOIN category c ON p.category_id = c.category_id 
-            WHERE LOWER(unaccent(p.name)) LIKE LOWER(unaccent(CONCAT('%', :name, '%'))) 
+            SELECT p.* FROM product p
+            JOIN category c ON p.category_id = c.id
+            WHERE LOWER(unaccent(p.name)) LIKE LOWER(unaccent(CONCAT('%', :name, '%')))
             AND LOWER(c.name) = LOWER(:categoryName)
-            """, nativeQuery = true)
-    List<Product> findByNameContainingIgnoreCaseAndAccentAndCategoryNameIgnoreCase(String name, String categoryName);
+            """,
+            countQuery = """
+            SELECT COUNT(*) FROM product p
+            JOIN category c ON p.category_id = c.id
+            WHERE LOWER(unaccent(p.name)) LIKE LOWER(unaccent(CONCAT('%', :name, '%')))
+            AND LOWER(c.name) = LOWER(:categoryName)
+            """,
+            nativeQuery = true)
+    Page<Product> findByNameContainingIgnoreCaseAndAccentAndCategoryNameIgnoreCase(String name, String categoryName, Pageable pageable);
 }

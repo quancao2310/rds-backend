@@ -1,5 +1,6 @@
 package com.example.regionaldelicacy.models;
 
+import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
 
@@ -7,7 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.example.regionaldelicacy.dto.SignUpDto;
+import com.example.regionaldelicacy.dtos.SignUpDto;
 import com.example.regionaldelicacy.enums.UserRole;
 
 import jakarta.persistence.Column;
@@ -43,6 +44,7 @@ public class User extends BaseModel implements UserDetails {
     private String address;
     private String city;
     private String country;
+    private Instant lastLogin;
 
     @Enumerated(EnumType.STRING)
     private UserRole role = UserRole.USER;
@@ -74,5 +76,25 @@ public class User extends BaseModel implements UserDetails {
     @Override
     public String getPassword() {
         return password;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }

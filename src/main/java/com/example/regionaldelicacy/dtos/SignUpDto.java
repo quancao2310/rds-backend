@@ -1,4 +1,4 @@
-package com.example.regionaldelicacy.dto;
+package com.example.regionaldelicacy.dtos;
 
 import com.example.regionaldelicacy.validators.ValidPassword;
 
@@ -16,21 +16,21 @@ public class SignUpDto {
 
     @NotBlank(message = "Email is mandatory")
     @Email(message = "Not a valid email")
-    String email;
+    private String email;
 
     @NotBlank(message = "Password is mandatory")
     @ValidPassword
-    String password;
+    private String password;
 
     @NotBlank(message = "Phonenumber is mandatory")
-    String phoneNumber;
+    private String phoneNumber;
 
     @NotBlank(message = "Address is mandatory")
-    String address;
+    private String address;
 
     @NotBlank(message = "City is mandatory")
-    String city;
+    private String city;
 
     @NotBlank(message = "Country is mandatory")
-    String country;
+    private String country;
 }

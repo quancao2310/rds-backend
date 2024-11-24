@@ -1,4 +1,6 @@
-package com.example.regionaldelicacy.controller;
+package com.example.regionaldelicacy.controllers;
+
+import java.time.Instant;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,11 +12,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.regionaldelicacy.dto.JwtResponseDto;
-import com.example.regionaldelicacy.dto.SignInDto;
-import com.example.regionaldelicacy.dto.SignUpDto;
+import com.example.regionaldelicacy.dtos.JwtResponseDto;
+import com.example.regionaldelicacy.dtos.SignInDto;
+import com.example.regionaldelicacy.dtos.SignUpDto;
 import com.example.regionaldelicacy.exceptions.ErrorResponse;
 import com.example.regionaldelicacy.models.User;
+import com.example.regionaldelicacy.repositories.UserRepository;
 import com.example.regionaldelicacy.security.JwtProvider;
 import com.example.regionaldelicacy.services.AuthService;
 
@@ -35,6 +38,7 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final AuthService authService;
     private final JwtProvider jwtProvider;
+    private final UserRepository userRepository;
 
     @Operation(summary = "Register a new user", description = "API to submit info to register a new user")
     @ApiResponse(responseCode = "201", description = "A new user has been successfully created")
@@ -54,7 +58,10 @@ public class AuthController {
         Authentication auth = authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(signInDto.getEmail(), signInDto.getPassword())
         );
-        String accessToken = jwtProvider.generateAccessToken((User) auth.getPrincipal());
+        User user = (User) auth.getPrincipal();
+        user.setLastLogin(Instant.now());
+        userRepository.save(user);
+        String accessToken = jwtProvider.generateAccessToken(user);
         return ResponseEntity.ok(new JwtResponseDto(accessToken));
     }
 }
