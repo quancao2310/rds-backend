@@ -37,9 +37,9 @@ public class ProductService {
     public Page<Product> getProductsByCategory(String categoryParam, Pageable pageable) {
         try {
             Long categoryId = Long.parseLong(categoryParam);
-            return productRepository.findByCategoryId(categoryId, pageable);
+            return productRepository.findByCategoryIdOrderByUpdatedAtDesc(categoryId, pageable);
         } catch (NumberFormatException e) {
-            return productRepository.findByCategoryNameIgnoreCase(categoryParam, pageable);
+            return productRepository.findByCategoryNameIgnoreCaseOrderByUpdatedAtDesc(categoryParam, pageable);
         }
     }
 
@@ -97,7 +97,7 @@ public class ProductService {
     }
 
     public Page<FavoriteInfoDto> getFavoriteProducts(User user, Pageable pageable) {
-        Page<Favorite> favoriteProducts = favoriteRepository.findByUserUserId(user.getUserId(), pageable);
+        Page<Favorite> favoriteProducts = favoriteRepository.findByUserUserIdOrderByUpdatedAtDesc(user.getUserId(), pageable);
         Page<FavoriteInfoDto> favoriteDtos = favoriteProducts.map(FavoriteInfoDto::fromFavorite);
         return favoriteDtos;
     }

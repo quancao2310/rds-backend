@@ -11,7 +11,7 @@ import com.example.regionaldelicacy.models.Favorite;
 
 @Repository
 public interface FavoriteRepository extends JpaRepository<Favorite, Long> {
-    Page<Favorite> findByUserUserId(Long userId, Pageable page);
+    Page<Favorite> findByUserUserIdOrderByUpdatedAtDesc(Long userId, Pageable page);
     Favorite findByUserUserIdAndProductProductId(Long userId, Long productId);
     Optional<Favorite> findByIdAndUserUserId(Long id, Long userId);
 }
