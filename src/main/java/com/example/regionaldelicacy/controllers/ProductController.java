@@ -22,6 +22,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -39,6 +40,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RestController
 @RequestMapping("/api/v1/products")
 @RequiredArgsConstructor
+@Slf4j
 @Tag(name = "Product", description = "Product API")
 public class ProductController {
 
@@ -73,8 +75,7 @@ public class ProductController {
             @Parameter(description = "Page size")
             @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = ProductPaginationUtils.validateAndCreatePageable(page, size, sort_by, sort_order);
-        Page<Product> productPage = productService.searchProducts(search, category, pageable);
-        Page<ProductDto> productDtoPage = productPage.map(ProductDto::fromProduct);
+        Page<ProductDto> productDtoPage = productService.searchProducts(search, category, pageable);
         return ResponseEntity.ok(PageResponse.of(productDtoPage));
     }
 
@@ -83,8 +84,8 @@ public class ProductController {
     @ApiResponse(responseCode = "404", description = "Product not found")
     @GetMapping("/{id}")
     public ResponseEntity<ProductDto> getProductById(@PathVariable Long id) {
-        Product product = productService.getProductById(id);
-        return ResponseEntity.ok(ProductDto.fromProduct(product));
+        ProductDto productDto = productService.getProductById(id);
+        return ResponseEntity.ok(productDto);
     }
 
     @Operation(summary = "Update product", description = "Update a product with the provided information")
