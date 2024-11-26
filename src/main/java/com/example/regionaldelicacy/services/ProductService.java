@@ -38,9 +38,9 @@ public class ProductService {
     private Page<Product> getProductsByCategory(String categoryParam, Pageable pageable) {
         try {
             Long categoryId = Long.parseLong(categoryParam);
-            return productRepository.findByCategoryIdOrderByUpdatedAtDesc(categoryId, pageable);
+            return productRepository.findByCategoryId(categoryId, pageable);
         } catch (NumberFormatException e) {
-            return productRepository.findByCategoryNameIgnoreCaseOrderByUpdatedAtDesc(categoryParam, pageable);
+            return productRepository.findByCategoryNameIgnoreCase(categoryParam, pageable);
         }
     }
 
@@ -50,17 +50,17 @@ public class ProductService {
         if (searchTerm == null || searchTerm.trim().isEmpty()) {
             productPage = categoryParam == null ? getAllProducts(pageable) : getProductsByCategory(categoryParam, pageable);
         } else if (categoryParam == null) {
-            productPage = productRepository.findByNameContainingIgnoreCaseAndAccent(searchTerm.trim(), pageable);
+            productPage = productRepository.findByNameContainingIgnoreCase(searchTerm.trim(), pageable);
         } else {
             try {
                 Long categoryId = Long.parseLong(categoryParam);
-                productPage = productRepository.findByNameContainingIgnoreCaseAndAccentAndCategoryId(
+                productPage = productRepository.findByNameContainingIgnoreCaseAndCategoryId(
                     searchTerm.trim(),
                     categoryId,
                     pageable
                 );
             } catch (NumberFormatException e) {
-                productPage = productRepository.findByNameContainingIgnoreCaseAndAccentAndCategoryNameIgnoreCase(
+                productPage = productRepository.findByNameContainingIgnoreCaseAndCategoryNameIgnoreCase(
                     searchTerm.trim(),
                     categoryParam,
                     pageable
