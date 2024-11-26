@@ -3,6 +3,7 @@ package com.example.regionaldelicacy.controllers;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.regionaldelicacy.constants.ProductSortingConstants;
 import com.example.regionaldelicacy.dtos.FavoriteAddDto;
 import com.example.regionaldelicacy.dtos.FavoriteInfoDto;
 import com.example.regionaldelicacy.dtos.PageResponse;
@@ -11,7 +12,8 @@ import com.example.regionaldelicacy.dtos.ProductDto;
 import com.example.regionaldelicacy.models.Product;
 import com.example.regionaldelicacy.models.User;
 import com.example.regionaldelicacy.services.ProductService;
-import com.example.regionaldelicacy.utils.PaginationUtils;
+import com.example.regionaldelicacy.utils.ProductPaginationUtils;
+import com.example.regionaldelicacy.validators.ValidProductSortField;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -20,6 +22,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -37,6 +40,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RestController
 @RequestMapping("/api/v1/products")
 @RequiredArgsConstructor
+@Slf4j
 @Tag(name = "Product", description = "Product API")
 public class ProductController {
 
@@ -61,13 +65,17 @@ public class ProductController {
             @RequestParam(required = false) String category,
             @Parameter(description = "Search term to filter products by name")
             @RequestParam(required = false) String search,
+            @Parameter(description = "Sort by field (name, price, updatedAt)")
+            @ValidProductSortField
+            @RequestParam(defaultValue = "updatedAt") String sort_by,
+            @Parameter(description = "Sort order (asc, desc)")
+            @RequestParam(defaultValue = ProductSortingConstants.DEFAULT_SORT_ORDER) String sort_order,
             @Parameter(description = "Page number")
             @RequestParam(defaultValue = "1") int page,
             @Parameter(description = "Page size")
             @RequestParam(defaultValue = "10") int size) {
-        Pageable pageable = PaginationUtils.validateAndCreatePageable(page, size);
-        Page<Product> productPage = productService.searchProducts(search, category, pageable);
-        Page<ProductDto> productDtoPage = productPage.map(ProductDto::fromProduct);
+        Pageable pageable = ProductPaginationUtils.validateAndCreatePageable(page, size, sort_by, sort_order);
+        Page<ProductDto> productDtoPage = productService.searchProducts(search, category, pageable);
         return ResponseEntity.ok(PageResponse.of(productDtoPage));
     }
 
@@ -76,8 +84,8 @@ public class ProductController {
     @ApiResponse(responseCode = "404", description = "Product not found")
     @GetMapping("/{id}")
     public ResponseEntity<ProductDto> getProductById(@PathVariable Long id) {
-        Product product = productService.getProductById(id);
-        return ResponseEntity.ok(ProductDto.fromProduct(product));
+        ProductDto productDto = productService.getProductById(id);
+        return ResponseEntity.ok(productDto);
     }
 
     @Operation(summary = "Update product", description = "Update a product with the provided information")
@@ -103,11 +111,17 @@ public class ProductController {
     @ApiResponse(responseCode = "200", description = "List of favorite products")
     @GetMapping("/favorites")
     public ResponseEntity<PageResponse<FavoriteInfoDto>> getFavoriteProducts(
-        @AuthenticationPrincipal User user,
-        @RequestParam(defaultValue = "1") int page,
-        @RequestParam(defaultValue = "10") int size
-    ) {
-        Pageable pageable = PaginationUtils.validateAndCreatePageable(page, size);
+            @AuthenticationPrincipal User user,
+            @Parameter(description = "Sort by field (name, price, updatedAt)")
+            @ValidProductSortField
+            @RequestParam(defaultValue = "updatedAt") String sort_by,
+            @Parameter(description = "Sort order (asc, desc)")
+            @RequestParam(defaultValue = ProductSortingConstants.DEFAULT_SORT_ORDER) String sort_order,
+            @Parameter(description = "Page number")
+            @RequestParam(defaultValue = "1") int page,
+            @Parameter(description = "Page size")
+            @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = ProductPaginationUtils.validateAndCreatePageable(page, size, sort_by, sort_order);
         Page<FavoriteInfoDto> favoriteProducts = productService.getFavoriteProducts(user, pageable);
         return ResponseEntity.ok(PageResponse.of(favoriteProducts));
     }

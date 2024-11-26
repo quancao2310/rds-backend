@@ -2,26 +2,33 @@ package com.example.regionaldelicacy.dtos;
 
 import com.example.regionaldelicacy.models.Product;
 
-public record ProductDto(
-    Long productId,
-    String name,
-    String description,
-    Double price,
-    String imageUrl,
-    String category,
-    String brand,
-    Integer stock
-) {
+import lombok.Data;
+
+@Data
+public class ProductDto {
+    private Long productId;
+    private String name;
+    private String description;
+    private Double price;
+    private String imageUrl;
+    private String category;
+    private String brand;
+    private Integer stock;
+    private Boolean isFavorite;
+
+    public ProductDto(Product product, Boolean isFavorite) {
+        this.productId = product.getProductId();
+        this.name = product.getName();
+        this.description = product.getDescription();
+        this.price = product.getPrice();
+        this.imageUrl = product.getImageUrl();
+        this.category = product.getCategory().getName();
+        this.brand = product.getBrand();
+        this.stock = product.getStock();
+        this.isFavorite = isFavorite;
+    }
+
     public static ProductDto fromProduct(Product product) {
-        return new ProductDto(
-            product.getProductId(),
-            product.getName(),
-            product.getDescription(),
-            product.getPrice(),
-            product.getImageUrl(),
-            product.getCategory().getName(),
-            product.getBrand(),
-            product.getStock()
-        );
+        return new ProductDto(product, false);
     }
 }
