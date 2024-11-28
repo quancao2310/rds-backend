@@ -18,6 +18,6 @@ public class FavoriteInfoDto {
         return new FavoriteInfoDto(
                 favorite.getId(),
                 favorite.getCreatedAt(),
-                ProductDto.fromProduct(favorite.getProduct()));
+                new ProductDto(favorite.getProduct(), favorite.getId()));
     }
 }

@@ -14,9 +14,9 @@ public class ProductDto {
     private String category;
     private String brand;
     private Integer stock;
-    private Boolean isFavorite;
+    private Long favoriteId;
 
-    public ProductDto(Product product, Boolean isFavorite) {
+    public ProductDto(Product product, Long favoriteId) {
         this.productId = product.getProductId();
         this.name = product.getName();
         this.description = product.getDescription();
@@ -25,10 +25,10 @@ public class ProductDto {
         this.category = product.getCategory().getName();
         this.brand = product.getBrand();
         this.stock = product.getStock();
-        this.isFavorite = isFavorite;
+        this.favoriteId = favoriteId;
     }
 
     public static ProductDto fromProduct(Product product) {
-        return new ProductDto(product, false);
+        return new ProductDto(product, null);
     }
 }

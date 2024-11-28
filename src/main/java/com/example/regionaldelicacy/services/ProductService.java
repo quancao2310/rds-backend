@@ -68,12 +68,14 @@ public class ProductService {
             }
         }
 
-        // Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        // if (auth != null && auth.isAuthenticated() && auth.getPrincipal() instanceof User) {
-        //     User user = (User) auth.getPrincipal();
-        //     return productPage.map(product -> new ProductDto(product, favoriteRepository
-        //             .existsByUserUserIdAndProductProductId(user.getUserId(), product.getProductId()))); // N + 1 problem
-        // }
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null && auth.isAuthenticated() && auth.getPrincipal() instanceof User) {
+            User user = (User) auth.getPrincipal();
+            return productPage.map(product -> new ProductDto(product, favoriteRepository
+                    .findByUserUserIdAndProductProductId(user.getUserId(), product.getProductId())
+                    .map(Favorite::getId)
+                    .orElse(null))); // N + 1 problem
+        }
         return productPage.map(ProductDto::fromProduct);
     }
 
@@ -83,7 +85,7 @@ public class ProductService {
         if (auth != null && auth.isAuthenticated() && auth.getPrincipal() instanceof User) {
             User user = (User) auth.getPrincipal();
             return new ProductDto(product, favoriteRepository
-                    .existsByUserUserIdAndProductProductId(user.getUserId(), id));
+                    .findByUserUserIdAndProductProductId(user.getUserId(), id).map(Favorite::getId).orElse(null));
         }
         return ProductDto.fromProduct(product);
     }
