@@ -10,11 +10,11 @@ import java.util.List;
 
 @Repository
 public interface CartRepository extends JpaRepository<Cart, Long> {
-    List<Cart> findByUserUserIdAndDeletedFalseOrderByCreatedAtDesc(Long userId, Pageable page);
+    List<Cart> findByUserIdAndDeletedFalseOrderByCreatedAtDesc(Long userId, Pageable page);
 
-    Cart findByCartIdAndUserUserIdAndDeletedFalse(Long cartId, Long userId);
+    Cart findByIdAndUserIdAndDeletedFalse(Long cartId, Long userId);
 
-    Cart findByProductProductIdAndUserUserIdAndDeletedFalse(Long productId, Long userId);
+    Cart findByProductIdAndUserIdAndDeletedFalse(Long productId, Long userId);
 
-    List<Cart> findAllByCartIdInAndDeletedFalse(List<Long> cartIds);
+    List<Cart> findAllByIdInAndDeletedFalse(List<Long> cartIds);
 }

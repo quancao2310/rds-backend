@@ -72,9 +72,9 @@ public class ProductService {
         if (auth != null && auth.isAuthenticated() && auth.getPrincipal() instanceof User) {
             User user = (User) auth.getPrincipal();
             return productPage.map(product -> new ProductDto(product, favoriteRepository
-                    .findByUserUserIdAndProductProductId(user.getUserId(), product.getProductId())
+                    .findByUserIdAndProductId(user.getId(), product.getId())
                     .map(Favorite::getId)
-                    .orElse(null))); // N + 1 problem
+                    .orElse(null))); // N + 1 problem, fix later
         }
         return productPage.map(ProductDto::fromProduct);
     }
@@ -85,7 +85,7 @@ public class ProductService {
         if (auth != null && auth.isAuthenticated() && auth.getPrincipal() instanceof User) {
             User user = (User) auth.getPrincipal();
             return new ProductDto(product, favoriteRepository
-                    .findByUserUserIdAndProductProductId(user.getUserId(), id).map(Favorite::getId).orElse(null));
+                    .findByUserIdAndProductId(user.getId(), id).map(Favorite::getId).orElse(null));
         }
         return ProductDto.fromProduct(product);
     }
@@ -118,14 +118,14 @@ public class ProductService {
     }
 
     public Page<FavoriteInfoDto> getFavoriteProducts(User user, Pageable pageable) {
-        Page<Favorite> favoriteProducts = favoriteRepository.findByUserUserIdOrderByUpdatedAtDesc(user.getUserId(), pageable);
+        Page<Favorite> favoriteProducts = favoriteRepository.findByUserIdOrderByUpdatedAtDesc(user.getId(), pageable);
         Page<FavoriteInfoDto> favoriteDtos = favoriteProducts.map(FavoriteInfoDto::fromFavorite);
         return favoriteDtos;
     }
 
     public FavoriteInfoDto addFavoriteProduct(User user, Long productId) {
         Product product = productRepository.findById(productId).orElseThrow(ProductNotFoundException::new);
-        Favorite favorite = favoriteRepository.findByUserUserIdAndProductProductId(user.getUserId(), productId).orElse(null);
+        Favorite favorite = favoriteRepository.findByUserIdAndProductId(user.getId(), productId).orElse(null);
 
         if (favorite == null) {
             favorite = Favorite.builder()
@@ -138,7 +138,7 @@ public class ProductService {
     }
 
     public void removeFavoriteProduct(User user, Long favoriteId) {
-        if (favoriteRepository.findByIdAndUserUserId(favoriteId, user.getUserId()).isPresent()) {
+        if (favoriteRepository.findByIdAndUserId(favoriteId, user.getId()).isPresent()) {
             favoriteRepository.deleteById(favoriteId);
         }
     }

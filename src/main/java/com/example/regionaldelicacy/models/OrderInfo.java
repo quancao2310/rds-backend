@@ -33,7 +33,7 @@ public class OrderInfo extends BaseModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long orderId;
+    private Long id;
 
     private String customerName;
     private String address;

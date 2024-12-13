@@ -34,7 +34,7 @@ public class CartService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User authenticatedUser = (User) authentication.getPrincipal();
         Pageable paging = PageRequest.of(page, size);
-        List<Cart> cartItems = cartRepository.findByUserUserIdAndDeletedFalseOrderByCreatedAtDesc(authenticatedUser.getUserId(), paging);
+        List<Cart> cartItems = cartRepository.findByUserIdAndDeletedFalseOrderByCreatedAtDesc(authenticatedUser.getId(), paging);
         List<CartItemDto> cartItemsInfo = new ArrayList<CartItemDto>();
         for (Cart cartItem : cartItems) {
             cartItemsInfo.add(CartItemDto.fromCart(cartItem));
@@ -49,8 +49,8 @@ public class CartService {
         if (product.getStock() < cartDTO.quantity()) {
             throw new ProductQuantityExceedException();
         }
-        Cart cart = cartRepository.findByProductProductIdAndUserUserIdAndDeletedFalse(product.getProductId(),
-                authenticatedUser.getUserId());
+        Cart cart = cartRepository.findByProductIdAndUserIdAndDeletedFalse(product.getId(),
+                authenticatedUser.getId());
         if (cart == null) {
             cart = new Cart();
             cart.setUser(authenticatedUser);
@@ -69,8 +69,8 @@ public class CartService {
     public CartItemDto updateCartItem(CartUpdateDto cartUpdateDto) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User authenticatedUser = (User) authentication.getPrincipal();
-        Cart cart = cartRepository.findByCartIdAndUserUserIdAndDeletedFalse(cartUpdateDto.cartId(),
-                authenticatedUser.getUserId());
+        Cart cart = cartRepository.findByIdAndUserIdAndDeletedFalse(cartUpdateDto.cartId(),
+                authenticatedUser.getId());
         if (cart == null) {
             throw new CartItemNotValidException();
         }
@@ -87,13 +87,12 @@ public class CartService {
     public void softDeleteCart(Long cartId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User authenticatedUser = (User) authentication.getPrincipal();
-        Cart cart = cartRepository.findByCartIdAndUserUserIdAndDeletedFalse(cartId,
-                authenticatedUser.getUserId());
+        Cart cart = cartRepository.findByIdAndUserIdAndDeletedFalse(cartId,
+                authenticatedUser.getId());
         if (cart == null) {
             throw new CartItemNotValidException();
         }
         cart.setDeleted(true);
         cartRepository.save(cart);
     }
-
 }

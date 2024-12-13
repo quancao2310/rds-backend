@@ -17,7 +17,7 @@ public class ProductDto {
     private Long favoriteId;
 
     public ProductDto(Product product, Long favoriteId) {
-        this.productId = product.getProductId();
+        this.productId = product.getId();
         this.name = product.getName();
         this.description = product.getDescription();
         this.price = product.getPrice();

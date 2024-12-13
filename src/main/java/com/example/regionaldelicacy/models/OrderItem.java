@@ -23,7 +23,7 @@ public class OrderItem extends BaseModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long orderItemId;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id", nullable = false)
@@ -36,4 +36,3 @@ public class OrderItem extends BaseModel {
     private Integer quantity;
     private Double intoMoney;
 }
-

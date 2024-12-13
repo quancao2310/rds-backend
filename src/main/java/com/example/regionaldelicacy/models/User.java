@@ -34,7 +34,7 @@ public class User extends BaseModel implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userId;
+    private Long id;
     private String name;
 
     @Column(unique = true, nullable = false)

@@ -23,7 +23,7 @@ public class UserDetailsDto {
     private String role;
 
     public UserDetailsDto(User user) {
-        this.userId = user.getUserId();
+        this.userId = user.getId();
         this.email = user.getEmail();
         this.name = user.getName();
         this.phoneNumber = user.getPhoneNumber();

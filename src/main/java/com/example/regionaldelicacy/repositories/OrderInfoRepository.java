@@ -10,6 +10,6 @@ import com.example.regionaldelicacy.models.OrderInfo;
 
 @Repository
 public interface OrderInfoRepository extends JpaRepository<OrderInfo, Long> {
-    List<OrderInfo> findByUserUserId(Long userId, Pageable paging);
-    OrderInfo findByOrderIdAndUserUserId(Long orderId, Long userId);
+    List<OrderInfo> findByUserId(Long userId, Pageable paging);
+    OrderInfo findByIdAndUserId(Long orderId, Long userId);
 }

@@ -15,10 +15,9 @@ public class CartItemDto {
 
     public static CartItemDto fromCart(Cart cart) {
         return new CartItemDto(
-                cart.getCartId(),
+                cart.getId(),
                 cart.getQuantity(),
                 cart.getIntoMoney(),
                 ProductDto.fromProduct(cart.getProduct()));
     }
-
 }

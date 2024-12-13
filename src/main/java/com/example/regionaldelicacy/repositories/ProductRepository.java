@@ -11,7 +11,6 @@ import com.example.regionaldelicacy.models.Product;
 public interface ProductRepository extends JpaRepository<Product, Long> {
     Page<Product> findByCategoryId(Long categoryId, Pageable pageable);
     Page<Product> findByCategoryNameIgnoreCase(String categoryName, Pageable pageable);
-    Product findByProductId(Long productId);
 
     // Search by name
     Page<Product> findByNameContainingIgnoreCase(String name, Pageable pageable);

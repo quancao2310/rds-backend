@@ -24,7 +24,7 @@ public class JwtProvider {
         try {
             Algorithm algorithm = Algorithm.HMAC256(JWT_SECRET);
             return JWT.create()
-                    .withClaim("userId", user.getUserId())
+                    .withClaim("userId", user.getId())
                     .withExpiresAt(new Date(System.currentTimeMillis() + JWT_EXPIRE_LENGTH))
                     .sign(algorithm);
         } catch (JWTCreationException exception) {

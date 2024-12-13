@@ -47,7 +47,7 @@ public class OrderService {
         List<OrderItemDto> items = order.getOrderItems().stream().map(item -> {
             Product productInfo = item.getProduct();
             OrderItemDto itemInfo = OrderItemDto.builder()
-                    .productId(productInfo.getProductId())
+                    .productId(productInfo.getId())
                     .name(productInfo.getName())
                     .description(productInfo.getDescription())
                     .price(productInfo.getPrice())
@@ -58,7 +58,7 @@ public class OrderService {
             return itemInfo;
         }).collect(Collectors.toList());
         OrderInfoDto orderInfo = OrderInfoDto.builder()
-                .orderId(order.getOrderId())
+                .orderId(order.getId())
                 .customerName(order.getCustomerName())
                 .address(order.getAddress())
                 .phoneNumber(order.getPhoneNumber())
@@ -80,7 +80,7 @@ public class OrderService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
 
-        List<Cart> cartItems = cartRepository.findAllByCartIdInAndDeletedFalse(orderRequest.getCartIds());
+        List<Cart> cartItems = cartRepository.findAllByIdInAndDeletedFalse(orderRequest.getCartIds());
         if (cartItems.isEmpty()) {
             throw new CartItemNotValidException();
         }
@@ -101,9 +101,9 @@ public class OrderService {
                 .build();
 
         List<OrderItem> orderItems = cartItems.stream().map(cart -> {
-            if (cart.getUser().getUserId() != user.getUserId())
+            if (cart.getUser().getId() != user.getId())
                 throw new CartItemNotValidException();
-            Product orderProduct = productRepository.findByProductId(cart.getProduct().getProductId());
+            Product orderProduct = cart.getProduct();
             if (orderProduct.getStock() < cart.getQuantity()) {
                 throw new ProductQuantityExceedException();
             }
@@ -141,7 +141,7 @@ public class OrderService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
         Pageable paging = PageRequest.of(page, size);
-        List<OrderInfo> orders = orderRepository.findByUserUserId(user.getUserId(), paging);
+        List<OrderInfo> orders = orderRepository.findByUserId(user.getId(), paging);
         List<OrderInfoDto> orderInfoLst = orders.stream().map(order -> getOrderInfo(order)).collect(Collectors.toList());
         return orderInfoLst;
     }
@@ -149,7 +149,7 @@ public class OrderService {
     public OrderInfoDto getOrderByUserIdAndOrderId(Long orderId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
-        OrderInfo order = orderRepository.findByOrderIdAndUserUserId(orderId, user.getUserId());
+        OrderInfo order = orderRepository.findByIdAndUserId(orderId, user.getId());
         if (order == null) {
             throw new OrderNotFoundException();
         }
