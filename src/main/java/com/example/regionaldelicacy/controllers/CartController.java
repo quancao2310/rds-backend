@@ -30,7 +30,7 @@ public class CartController {
     private final CartService cartService;
 
     @Operation(summary = "Get all items in user's cart", description = "Return a list contains basic info of each items in user's cart")
-    @ApiResponse(responseCode = "200", description = "Item list has been retrived succesfully", content = {
+    @ApiResponse(responseCode = "200", description = "Item list has been retrieved succesfully", content = {
             @Content(mediaType = "application/json", schema = @Schema(implementation = CartItemDto[].class))
     })
     @GetMapping
