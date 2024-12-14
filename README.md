@@ -31,8 +31,8 @@ To install and run the application, follow these steps:
 1. **Clone the repository:**
 
 ```sh
-git clone https://github.com/quancao2310/regional-delicacy-shop-backend.git
-cd regional-delicacy-shop-backend
+git clone https://github.com/quancao2310/rds-backend.git
+cd rds-backend
 ```
 
 2. **Add the environment variables:**
