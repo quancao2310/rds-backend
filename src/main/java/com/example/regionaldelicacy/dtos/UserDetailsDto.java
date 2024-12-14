@@ -26,10 +26,6 @@ public class UserDetailsDto {
         this.userId = user.getId();
         this.email = user.getEmail();
         this.name = user.getName();
-        this.phoneNumber = user.getPhoneNumber();
-        this.address = user.getAddress();
-        this.city = user.getCity();
-        this.country = user.getCountry();
         this.lastLogin = user.getLastLogin();
         this.role = user.getRole().name();
     }

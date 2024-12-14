@@ -35,15 +35,16 @@ public class User extends BaseModel implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
 
     @Column(unique = true, nullable = false)
     private String email;
+
+    @Column(nullable = false)
+    private String name;
+
+    @Column(nullable = false)
     private String password;
-    private String phoneNumber;
-    private String address;
-    private String city;
-    private String country;
+
     private Instant lastLogin;
 
     @Enumerated(EnumType.STRING)
@@ -53,10 +54,6 @@ public class User extends BaseModel implements UserDetails {
         this.name = userSignupInfo.getName();
         this.email = userSignupInfo.getEmail();
         this.password = encryptedPassword;
-        this.phoneNumber = userSignupInfo.getPhoneNumber();
-        this.address = userSignupInfo.getAddress();
-        this.city = userSignupInfo.getCity();
-        this.country = userSignupInfo.getCountry();
         this.role = role;
     }
 

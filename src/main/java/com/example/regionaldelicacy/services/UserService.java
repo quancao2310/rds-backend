@@ -35,10 +35,6 @@ public class UserService implements UserDetailsService {
 
         currentUser.setName(updateDto.getName());
         currentUser.setEmail(updateDto.getEmail());
-        currentUser.setPhoneNumber(updateDto.getPhoneNumber());
-        currentUser.setAddress(updateDto.getAddress());
-        currentUser.setCity(updateDto.getCity());
-        currentUser.setCountry(updateDto.getCountry());
 
         return userRepository.save(currentUser);
     }
