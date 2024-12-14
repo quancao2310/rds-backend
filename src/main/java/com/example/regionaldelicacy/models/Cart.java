@@ -2,6 +2,7 @@ package com.example.regionaldelicacy.models;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -11,11 +12,15 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Cart extends BaseModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false)
+    private Integer quantity;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
@@ -26,11 +31,5 @@ public class Cart extends BaseModel {
     private Product product;
 
     @Column(nullable = false)
-    private Integer quantity;
-
-    @Column(nullable = false)
-    private Double intoMoney;
-
-    @Column(nullable = false)
-    private Boolean deleted = false;
+    private Boolean deleted;
 }
