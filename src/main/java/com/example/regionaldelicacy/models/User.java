@@ -39,7 +39,7 @@ public class User extends BaseModel implements UserDetails {
     @Column(unique = true, nullable = false)
     private String email;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "NVARCHAR(255)")
     private String name;
 
     @Column(nullable = false)
