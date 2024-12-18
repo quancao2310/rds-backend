@@ -1,5 +1,7 @@
 package com.example.regionaldelicacy.models;
 
+import java.util.List;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -8,6 +10,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -45,4 +48,7 @@ public class Product extends BaseModel {
 
     @Column(nullable = false)
     private Integer stock;
+
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    private List<Favorite> favorites;
 }

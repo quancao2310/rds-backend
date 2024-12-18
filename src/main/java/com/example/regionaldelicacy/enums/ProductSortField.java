@@ -7,12 +7,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum ProductSortField {
     NAME("name"),
-    PRICE("price"),
-    UPDATED_AT("updatedAt");
+    PRICE("price");
 
     private final String fieldName;
 
-    public static ProductSortField fromString(String value) {
+    public static ProductSortField fromString(String value) throws IllegalArgumentException {
         for (ProductSortField field : values()) {
             if (field.getFieldName().equals(value)) {
                 return field;

@@ -61,13 +61,13 @@ public class ProductController {
     @ApiResponse(responseCode = "200", description = "List of products")
     @GetMapping("")
     public ResponseEntity<PageResponse<ProductDto>> getAllProducts(
-            @Parameter(description = "Category to filter products, can be the ID or the exact-matched, case-insensitive name of the category")
+            @Parameter(description = "The exact-matched, case-insensitive category name to filter products")
             @RequestParam(required = false) String category,
             @Parameter(description = "Search term to filter products by name")
             @RequestParam(required = false) String search,
-            @Parameter(description = "Sort by field (name, price, updatedAt)")
+            @Parameter(description = "Sort by field (name, price)")
             @ValidProductSortField
-            @RequestParam(defaultValue = "updatedAt") String sort_by,
+            @RequestParam(required = false) String sort_by,
             @Parameter(description = "Sort order (asc, desc)")
             @RequestParam(defaultValue = ProductSortingConstants.DEFAULT_SORT_ORDER) String sort_order,
             @Parameter(description = "Page number")
@@ -75,7 +75,7 @@ public class ProductController {
             @Parameter(description = "Page size")
             @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = ProductPaginationUtils.validateAndCreatePageable(page, size, sort_by, sort_order);
-        Page<ProductDto> productDtoPage = productService.searchProducts(search, category, pageable);
+        Page<ProductDto> productDtoPage = productService.getProducts(search, category, pageable);
         return ResponseEntity.ok(PageResponse.of(productDtoPage));
     }
 

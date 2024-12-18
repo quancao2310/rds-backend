@@ -2,8 +2,6 @@ package com.example.regionaldelicacy.services;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.example.regionaldelicacy.dtos.FavoriteInfoDto;
@@ -18,6 +16,7 @@ import com.example.regionaldelicacy.models.User;
 import com.example.regionaldelicacy.repositories.CategoryRepository;
 import com.example.regionaldelicacy.repositories.FavoriteRepository;
 import com.example.regionaldelicacy.repositories.ProductRepository;
+import com.example.regionaldelicacy.utils.SecurityUtils;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,63 +30,19 @@ public class ProductService {
     private final CategoryRepository categoryRepository;
     private final FavoriteRepository favoriteRepository;
 
-    private Page<Product> getAllProducts(Pageable pageable) {
-        return productRepository.findAll(pageable);
-    }
-
-    private Page<Product> getProductsByCategory(String categoryParam, Pageable pageable) {
-        try {
-            Long categoryId = Long.parseLong(categoryParam);
-            return productRepository.findByCategoryId(categoryId, pageable);
-        } catch (NumberFormatException e) {
-            return productRepository.findByCategoryNameIgnoreCase(categoryParam, pageable);
-        }
-    }
-
-    public Page<ProductDto> searchProducts(String searchTerm, String categoryParam, Pageable pageable) {
-        Page<Product> productPage = null;
-
-        if (searchTerm == null || searchTerm.trim().isEmpty()) {
-            productPage = categoryParam == null ? getAllProducts(pageable) : getProductsByCategory(categoryParam, pageable);
-        } else if (categoryParam == null) {
-            productPage = productRepository.findByNameContainingIgnoreCase(searchTerm.trim(), pageable);
-        } else {
-            try {
-                Long categoryId = Long.parseLong(categoryParam);
-                productPage = productRepository.findByNameContainingIgnoreCaseAndCategoryId(
-                    searchTerm.trim(),
-                    categoryId,
-                    pageable
-                );
-            } catch (NumberFormatException e) {
-                productPage = productRepository.findByNameContainingIgnoreCaseAndCategoryNameIgnoreCase(
-                    searchTerm.trim(),
-                    categoryParam,
-                    pageable
-                );
-            }
-        }
-
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth != null && auth.isAuthenticated() && auth.getPrincipal() instanceof User) {
-            User user = (User) auth.getPrincipal();
-            return productPage.map(product -> new ProductDto(product, favoriteRepository
-                    .findByUserIdAndProductId(user.getId(), product.getId())
-                    .map(Favorite::getId)
-                    .orElse(null))); // N + 1 problem, fix later
-        }
-        return productPage.map(ProductDto::fromProduct);
+    public Page<ProductDto> getProducts(String searchTerm, String categoryName, Pageable pageable) {
+        return productRepository.findProductList(
+            SecurityUtils.getCurrentUserId(),
+            searchTerm,
+            categoryName,
+            pageable
+        );
     }
 
     public ProductDto getProductById(Long id) {
-        Product product = productRepository.findById(id).orElseThrow(ProductNotFoundException::new);
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth != null && auth.isAuthenticated() && auth.getPrincipal() instanceof User) {
-            User user = (User) auth.getPrincipal();
-            return new ProductDto(product, favoriteRepository
-                    .findByUserIdAndProductId(user.getId(), id).map(Favorite::getId).orElse(null));
-        }
-        return ProductDto.fromProduct(product);
+        return productRepository
+                .findByIdWithFavoriteId(id, SecurityUtils.getCurrentUserId())
+                .orElseThrow(ProductNotFoundException::new);
     }
 
     public Product createProduct(ProductCreateUpdateDto productCreateDto) {
