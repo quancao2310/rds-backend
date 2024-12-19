@@ -2,11 +2,13 @@ package com.example.regionaldelicacy.dtos;
 
 import com.example.regionaldelicacy.models.Product;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
+@AllArgsConstructor
 public class ProductDto {
-    private Long productId;
+    private Long id;
     private String name;
     private String description;
     private Double price;
@@ -17,7 +19,7 @@ public class ProductDto {
     private Long favoriteId;
 
     public ProductDto(Product product, Long favoriteId) {
-        this.productId = product.getId();
+        this.id = product.getId();
         this.name = product.getName();
         this.description = product.getDescription();
         this.price = product.getPrice();

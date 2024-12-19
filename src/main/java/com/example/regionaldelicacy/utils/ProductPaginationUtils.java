@@ -23,14 +23,17 @@ public final class ProductPaginationUtils {
             throw new InvalidPaginationParametersException("Page size cannot be greater than " + ProductPagingConstants.MAX_PAGE_SIZE);
         }
 
-        ProductSortField sortField;
-        try {
-            sortField = ProductSortField.fromString(sortBy);
-        } catch (IllegalArgumentException e) {
-            throw new InvalidPaginationParametersException(
-                String.format("Invalid sort field: '%s'. Allowed values are: %s", 
-                    sortBy, ProductSortingConstants.getAllowedSortFieldsString())
-            );
+        if (sortBy == null) {
+            sortBy = ProductSortingConstants.DEFAULT_SORT_BY;
+        } else {
+            try {
+                ProductSortField.fromString(sortBy);
+            } catch (IllegalArgumentException e) {
+                throw new InvalidPaginationParametersException(
+                    String.format("Invalid sort field: '%s'. Allowed values are: %s", 
+                        sortBy, ProductSortingConstants.getAllowedSortFieldsString())
+                );
+            }
         }
 
         Sort.Direction sortDirection;
@@ -40,6 +43,6 @@ public final class ProductPaginationUtils {
             throw new InvalidPaginationParametersException(e.getMessage());
         }
 
-        return PageRequest.of(page - 1, size, Sort.by(sortDirection, sortField.getFieldName()));
+        return PageRequest.of(page - 1, size, Sort.by(sortDirection, sortBy));
     }
 }

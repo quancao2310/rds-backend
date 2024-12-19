@@ -1,17 +1,14 @@
 package com.example.regionaldelicacy.models;
 
-import java.util.List;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -21,34 +18,32 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class Product extends BaseModel {
+@Builder
+public class Address extends BaseModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, columnDefinition = "NVARCHAR(255)")
-    private String name;
-
-    @Column(columnDefinition = "NVARCHAR(MAX)")
-    private String description;
-
-    @Column(nullable = false)
-    private Double price;
-
-    @Column(nullable = false)
-    private String imageUrl;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id", nullable = false)
-    private Category category;
+    @Column(nullable = false, columnDefinition = "NVARCHAR(MAX)")
+    private String address;
 
     @Column(nullable = false, columnDefinition = "NVARCHAR(255)")
-    private String brand;
+    private String city;
+
+    @Column(nullable = false, columnDefinition = "NVARCHAR(255)")
+    private String country;
 
     @Column(nullable = false)
-    private Integer stock;
+    private String postalCode;
 
-    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
-    private List<Favorite> favorites;
+    @Column(nullable = false)
+    private String phoneNumber;
+
+    @Column(nullable = false, columnDefinition = "NVARCHAR(255)")
+    private String customerName;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 }
