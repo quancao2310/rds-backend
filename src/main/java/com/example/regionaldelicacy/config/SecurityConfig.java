@@ -60,6 +60,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/v1/categories").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/v1/categories/{id:[0-9]+}").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/categories/{id:[0-9]+}").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/v1/contact-us").permitAll()
                         .anyRequest().authenticated())
                 .build();
     }

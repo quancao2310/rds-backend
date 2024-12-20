@@ -14,6 +14,21 @@
       "name": "cors.allowed-origins",
       "type": "java.lang.List<java.lang.String>",
       "description": "A comma-separated list of CORS Allowed Origins"
+    },
+    {
+      "name": "sendgrid.api-key",
+      "type": "java.lang.String",
+      "description": "Sendgrid API Key"
+    },
+    {
+      "name": "sendgrid.from-email",
+      "type": "java.lang.String",
+      "description": "Sendgrid From Email"
+    },
+    {
+      "name": "app.admin-email",
+      "type": "java.lang.String",
+      "description": "Admin Email"
     }
   ]
 }
