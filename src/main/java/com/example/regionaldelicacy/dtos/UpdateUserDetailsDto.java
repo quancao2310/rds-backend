@@ -14,16 +14,4 @@ public class UpdateUserDetailsDto {
     @NotBlank(message = "Email is mandatory")
     @Email(message = "Not a valid email")
     private String email;
-
-    @NotBlank(message = "Phonenumber is mandatory")
-    private String phoneNumber;
-
-    @NotBlank(message = "Address is mandatory")
-    private String address;
-
-    @NotBlank(message = "City is mandatory")
-    private String city;
-
-    @NotBlank(message = "Country is mandatory")
-    private String country;
 }
