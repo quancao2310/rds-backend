@@ -15,10 +15,6 @@ public class UserDetailsDto {
     private Long userId;
     private String email;
     private String name;
-    private String phoneNumber;
-    private String address;
-    private String city;
-    private String country;
     private Instant lastLogin;
     private String role;
 
