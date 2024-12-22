@@ -73,7 +73,7 @@ public class ProductService {
     }
 
     public Page<FavoriteInfoDto> getFavoriteProducts(User user, Pageable pageable) {
-        Page<Favorite> favoriteProducts = favoriteRepository.findByUserIdOrderByUpdatedAtDesc(user.getId(), pageable);
+        Page<Favorite> favoriteProducts = favoriteRepository.findByUserId(user.getId(), pageable);
         Page<FavoriteInfoDto> favoriteDtos = favoriteProducts.map(FavoriteInfoDto::fromFavorite);
         return favoriteDtos;
     }

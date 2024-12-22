@@ -112,9 +112,9 @@ public class ProductController {
     @GetMapping("/favorites")
     public ResponseEntity<PageResponse<FavoriteInfoDto>> getFavoriteProducts(
             @AuthenticationPrincipal User user,
-            @Parameter(description = "Sort by field (name, price, updatedAt)")
+            @Parameter(description = "Sort by field (name, price)")
             @ValidProductSortField
-            @RequestParam(defaultValue = "updatedAt") String sort_by,
+            @RequestParam(required = false) String sort_by,
             @Parameter(description = "Sort order (asc, desc)")
             @RequestParam(defaultValue = ProductSortingConstants.DEFAULT_SORT_ORDER) String sort_order,
             @Parameter(description = "Page number")
