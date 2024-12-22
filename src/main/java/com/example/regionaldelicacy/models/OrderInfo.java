@@ -7,6 +7,7 @@ import com.example.regionaldelicacy.enums.PaymentMethod;
 import com.example.regionaldelicacy.enums.PaymentStatus;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -35,7 +36,10 @@ public class OrderInfo extends BaseModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(columnDefinition = "NVARCHAR(255)")
     private String customerName;
+
+    @Column(columnDefinition = "NVARCHAR(MAX)")
     private String address;
     private String phoneNumber;
     private String email;
